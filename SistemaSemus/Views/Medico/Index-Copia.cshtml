@@ -1,0 +1,60 @@
+﻿@model PagedList.IPagedList<SistemaSemus.Models.Medico>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Inicio";
+    string nome_down_up = ViewBag.NomeSortParm == "nome_desc" ? "down" : "up";
+    string crm_down_up = ViewBag.CRMSortParm == "crm_desc" ? "up" : "down";
+    string area_down_up = ViewBag.AreaSortParm == "Area" ? "up" : "down";
+}
+
+<main role="main">
+    <div class="jumbotron">
+        <div class="container">
+            <h3 class="display-4">Lista de Médicos</h3>
+            <p><a class="btn btn-primary btn-lg" href="~/Medico/Create" role="button">Cadastrar &raquo;</a></p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                @Html.ActionLink("CRM", "Index", new { sortOrder = ViewBag.CRMSortParm, currentFilter = ViewBag.CurrentFilter }) <i class="fas fa-angle-double-@crm_down_up text-primary"></i>
+                            </th>
+                            <th scope="col">
+                                @Html.ActionLink("Nome", "Index", new { sortOrder = ViewBag.NomeSortParm, currentFilter = ViewBag.CurrentFilter }) <i class="fas fa-angle-double-@nome_down_up text-primary"></i>
+                            </th>
+                            <th scope="col">
+                                @Html.ActionLink("Area de Atuação", "Index", new { sortOrder = ViewBag.AreaSortParm, currentFilter = ViewBag.CurrentFilter }) <i class="fas fa-angle-double-@area_down_up text-primary"></i>
+                            </th>
+                            <th scope="col"><i class="fas fa-info-circle"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Area_Atuacao)</td>
+                                <td>
+                                    @Html.ActionLink("Detalhes", "Details", new { id = item.ID }) |
+                                    @Html.ActionLink("Editar", "Edit", new { id = item.ID })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+                Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+            </div>
+        </div>
+        <hr>
+    </div>
+</main>

@@ -1,0 +1,205 @@
+﻿@model IEnumerable<SistemaSemus.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "IndexAsync";
+    Layout = "~/Views/Shared/_LayoutBeagle.cshtml";
+}
+
+<div class="be-content">
+    <div class="main-content container-fluid">
+        <div class="user-profile">
+            <div class="row">
+                <!-- Usuario -->
+                <div class="col-lg-5">
+                    <div class="user-display">
+                        <div class="user-display-bg">
+                            <img src="~/Images/Backgrounds/health-background.jpg" alt="Profile Background">
+                        </div>
+                        <div class="user-display-bottom">
+                            <div class="user-display-avatar"><img src="~/Images/user.png" alt="Avatar"></div>
+                            <div class="user-display-info">
+                                @{
+                                    var usuario = Model.SingleOrDefault(u => u.UserName.Equals(User.Identity.Name));
+                                    if (ViewBag.User != null)
+                                    {
+                                        usuario = Model.SingleOrDefault(u => u.Id == ViewBag.User);
+                                    }
+                                }
+                                <div class="name">@usuario.Nome</div>
+                                <div class="nick">
+                                    <span class="mdi mdi-account"></span> @usuario.UserName
+                                </div>
+                            </div>
+                            <div class="row user-display-details">
+                                <div class="col-4">
+                                    <div class="title">Receitas</div>
+                                    <div class="counter">0</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="title">Pedidos</div>
+                                    <div class="counter">0</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="title">Compras</div>
+                                    <div class="counter">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- About -->
+                    <div class="user-info-list card">
+                        <div class="card-header card-header-divider">Sobre</div>
+                        <div class="card-body">
+                            <table class="no-border no-strip skills">
+                                <tbody class="no-border-x no-border-y">
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-city"></span></td>
+                                        <td class="item">Setor<span class="icon s7-portfolio"></span></td>
+                                        <td>@usuario.Setor.Descricao</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-case"></span></td>
+                                        <td class="item">Função<span class="icon s7-portfolio"></span></td>
+                                        <td>@usuario.Funcao.Descricao</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-cake"></span></td>
+                                        <td class="item">Aniversário<span class="icon s7-gift"></span></td>
+                                        <td>@usuario.Nascimento.ToShortDateString()</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-smartphone-android"></span></td>
+                                        <td class="item">Celular<span class="icon s7-phone"></span></td>
+                                        <td>@usuario.PhoneNumber</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-globe-alt"></span></td>
+                                        <td class="item">Endereço<span class="icon s7-map-marker"></span></td>
+                                        <td>@usuario.Endereco</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-pin"></span></td>
+                                        <td class="item">Email<span class="icon s7-global"></span></td>
+                                        <td>@usuario.Email</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Claims -->
+                    <div class="user-info-list card">
+                        <div class="card-header card-header-divider">Claims do Usuário</div>
+                        <div class="card-body">
+                            <table class="no-border no-strip skills">
+                                <thead>
+                                    <tr>
+                                        <th>Descrição</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-border-x no-border-y">
+                                    @foreach (var item in usuario.Claims)
+                                    {
+                                        <tr>
+                                            <td>@item.ClaimType</td>
+                                            <td>@item.ClaimValue</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Usuarios -->
+                <div class="col-lg-7">
+                    <div class="widget widget-fullwidth widget-small">
+                        <div class="widget-head pb-6">
+                            <div class="title">Usuários</div>
+                        </div>
+                        <div class="widget-chart-container">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Login</th>
+                                        <th>Nome</th>
+                                        <th>Setor</th>
+                                        <th>Função</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="user-avatar">
+                                                <img src="~/Images/Beagle/avatar5.png" alt="Avatar">
+                                                <a href="#" name="@item.Id" class="md-trigger" data-modal="full-success">@item.UserName</a>
+                                            </td>
+                                            <td>@item.Nome</td>
+                                            <td>@item.Setor.Descricao</td>
+                                            <td>@item.Funcao.Descricao</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL Detalhes -->
+<div class="modal-container modal-full-color modal-full-color-success modal-effect-8" id="full-success">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close modal-close" type="button" data-dismiss="modal" aria-hidden="true"><span class="mdi mdi-close"></span></button>
+        </div>
+        <div class="modal-body">
+            <div class="text-center">
+                <form action="/UsuarioManager/IndexAsync" method="post">
+                    <span class="modal-main-icon mdi mdi-check"></span>
+                    <h3>Gerenciar Usuário!</h3>
+                    <p>Defina claims para o usuário, carregue as informações do usuário.<br />Edite e gerencie as informações.</p>
+                    <input type="text" name="id" hidden />
+                    <div class="mt-8">
+                        <button class="btn btn-secondary btn-space modal-close" type="button" data-dismiss="modal">Cancelar</button>
+                        <a href="#" id="setUserClaim" class="btn btn-success btn-space modal-close" type="button" data-dismiss="modal">Definir Claim</a>
+                        <button class="btn btn-success btn-space modal-close" type="submit" data-dismiss="modal">Carregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer"></div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/Beagle/jquery.niftymodals.js"></script>
+
+    <script type="text/javascript">
+        $.fn.niftyModal('setDefaults', {
+            overlaySelector: '.modal-overlay',
+            contentSelector: '.modal-content',
+            closeSelector: '.modal-close',
+            classAddAfterOpen: 'modal-show'
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $(".md-trigger").click(function () {
+                var id = $(this).attr('name');
+                href = "/Claims/SetUserClaimAsync?id=" + id;
+                $("#full-success input[name='id']").val(id);
+                $("#full-success #setUserClaim").attr('href', href);
+            });
+        });
+    </script>
+}
+
+
+

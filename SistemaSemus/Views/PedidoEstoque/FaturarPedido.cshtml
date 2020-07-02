@@ -1,0 +1,96 @@
+﻿@model SistemaSemus.Models.PedidoEstoque
+
+@{
+    ViewBag.Title = "FaturarPedido";
+    Layout = "~/Views/Shared/_LayoutEstoques.cshtml";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" id="EstoqueID">@ViewBag.Estoque - @ViewBag.Descricao</h1>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <a href="~/PedidoEstoque/Index?estoqueID=@ViewBag.Estoque&tipoProduto=@Model.TipoPedido" class="btn btn-sm btn-outline-secondary">
+                    &laquo; Voltar
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#ModalItensFalta">
+                    ...
+                </button>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span> This week
+            </button>
+        </div>
+    </div>
+
+    <!-- Section -->
+    <div class="container">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ID)
+
+            <div class="row">
+                <div class="col-md-10">
+                    <h4 class="text-info">@Model.EstoqueSemus.Descricao</h4>
+                    <h5 class="text-dark">Pedido: @Model.ID <small class="text-muted">Data Entrada: @Model.DataEntrada</small></h5>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary btn-block">Concluir</button>
+                </div>
+            </div>
+
+            <!-- Table Carrinho -->
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                            <th>
+                                <a href="#" id="selecionaTodos">Incluir</a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.PedidoProdutos)
+                        {
+                            if (item.ProdutoSemEstoqueID == null)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Quantidade)</td>
+                                    <td><input type="checkbox" name="produtos" value="@item.ID" checked onclick="hab_desabilita()" /></td>
+                                </tr>
+                            }
+                        }
+                        @foreach (var item in Model.PedidoProdutos)
+                        {
+                            if (item.ProdutoID == null)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Quantidade)</td>
+                                    <td><input type="checkbox" name="produtos" value="@item.ID" checked onclick="hab_desabilita()" /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</main>
+
+@section Scripts{
+    <script src="~/Scripts/SemusScripts/Pedidos.js"></script>
+    <script src="~/Scripts/SemusScripts/ModificaNavbarEstoque.js"></script>
+}

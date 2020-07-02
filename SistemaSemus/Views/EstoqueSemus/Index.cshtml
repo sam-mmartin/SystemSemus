@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SistemaSemus.Models.EstoqueSemus>
+
+@{
+    ViewBag.Title = "Index Estoques";
+    Layout = "~/Views/Shared/_LayoutEstoques.cshtml";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" id="EstoqueID">Estoques</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                @Html.ActionLink("Novo Estoque", "Create", null, new { @class = "btn btn-sm btn-outline-secondary" })
+                <button type="button" class="btn btn-sm btn-outline-secondary">...</button>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span> This week
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-primary">@item.ID</strong>
+                        <h4 class="mb-0">@item.Descricao</h4>
+
+                        @if (item.ID == 1)
+                        {
+                            <div class="mb-1 text-muted">Pedidos de Compra: @item.PedidoCompras.Where(p => p.Faturado == false).Count()</div>
+                        }
+                        else
+                        {
+                            <div class="mb-1 text-muted">Pedidos: @item.PedidoEstoques.Where(p => p.Faturado == false).Count()</div>
+                        }
+
+                        <p class="card-text mb-auto">Acesse para informações detalhadas.</p>
+
+                        @Html.ActionLink("Acessar", "Details", new { id = item.ID }, new { @class = "btn btn-sm btn-outline-primary btnEstoque" })
+                    </div>
+
+                    <div class="col-auto d-none d-lg-block">
+                        <svg class="bd-placeholder-img" width="180" height="auto" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+                            <title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#55595c" />
+                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>

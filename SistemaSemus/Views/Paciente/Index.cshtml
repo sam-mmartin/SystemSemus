@@ -1,0 +1,61 @@
+﻿@model PagedList.IPagedList<SistemaSemus.Models.Paciente>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Inicio";
+    string nome_down_up = ViewBag.NomeSortParm == "nome_desc" ? "down" : "up";
+    string data_down_up = ViewBag.DataSortParm == "Data" ? "up" : "down";
+}
+
+<main role="main">
+    <div class="jumbotron">
+        <div class="container">
+            <h3 class="display-4">Pacientes</h3>
+            <p><a class="btn btn-primary btn-lg" href="~/Paciente/Create" role="button">Cadastrar &raquo;</a></p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">CPF</th>
+                            <th scope="col">
+                                @Html.ActionLink("Nome", "Index", new { sortOrder = ViewBag.NomeSortParm, currentFilter = ViewBag.CurrentFilter }) <i class="fas fa-angle-double-@nome_down_up text-primary"></i>
+                            </th>
+                            <th scope="col">RG</th>
+                            <th scope="col">Orgão Emissor</th>
+                            <th scope="col">
+                                @Html.ActionLink("Data de Nascimento", "Index", new { sortOrder = ViewBag.DataSortParm, currentFilter = ViewBag.CurrentFilter }) <i class="fas fa-angle-double-@data_down_up text-primary"></i>
+                            </th>
+                            <th scope="col"><i class="fas fa-info-circle"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                                <td>@Html.DisplayFor(modelItem => item.RG)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Orgao_Emissor)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DataNascimento)</td>
+                                <td>
+                                    @Html.ActionLink("Detalhes", "Details", new { id = item.ID }) |
+                                    @Html.ActionLink("Editar", "Edit", new { id = item.ID })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+                Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+            </div>
+        </div>
+        <hr>
+    </div>
+</main>

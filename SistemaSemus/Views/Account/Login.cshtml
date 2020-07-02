@@ -1,0 +1,40 @@
+﻿@model SistemaSemus.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="text-center mb-4">
+        <img class="mb-4" src="~/Images/doctor.png" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Entrar no Sistema</h1>
+        <p>Build form controls with floating labels via the <code>:placeholder-shown</code> pseudo-element. <a href="https://caniuse.com/#feat=css-placeholder-shown">Works in latest Chrome, Safari, and Firefox.</a></p>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-label-group">
+        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Usuário" })
+        @Html.LabelFor(m => m.UserName)
+    </div>
+
+    <div class="form-label-group">
+        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Senha" })
+        @Html.LabelFor(m => m.Password)
+    </div>
+
+    <div class="checkbox mb-3">
+        @Html.CheckBoxFor(m => m.RememberMe)
+        @Html.LabelFor(m => m.RememberMe)
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted text-center">&copy; @DateTime.Now.Year - SEMUS</p>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

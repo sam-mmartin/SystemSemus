@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title - SEMUS</title>
+    @Styles.Render("~/Content/stock")
+</head>
+<body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="~/Home/Index">SEMUS</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        @if (ViewBag.TipoProduto != null)
+        {
+            using (Html.BeginForm(null, null, new { estoqueID = ViewBag.Estoque, TipoProduto = ViewBag.TipoProduto }, FormMethod.Post, new { @class = "w-100" }))
+            {
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control form-control-dark w-100", placeholder = "Pesquisar" })
+            }
+        }
+        else
+        {
+            using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "w-100" }))
+            {
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control form-control-dark w-100", placeholder = "Pesquisar" })
+            }
+        }
+
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                @Html.Partial("_SignOut")
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- SideBar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="sidebar-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <!-- Dashboard -->
+                        <li class="nav-item">
+                            <a class="nav-link active" href="~/EstoqueSemus/Index">
+                                <span data-feather="home"></span>
+                                Dashboard <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+
+                        <!-- Medicamentos -->
+                        <li class="nav-item">
+                            <a class="nav-link" id="Medicamentos" href="~/Produto/Details?tipoProduto=1">
+                                <span data-feather="database"></span>
+                                Medicamentos
+                            </a>
+                        </li>
+
+                        <!-- Suprimentos -->
+                        <li class="nav-item">
+                            <a class="nav-link" id="Suprimentos" href="~/Produto/Details?tipoProduto=2">
+                                <span data-feather="database"></span>
+                                Suprimentos
+                            </a>
+                        </li>
+
+                        @if (ViewBag.Estoque != null)
+                        {
+                            <!-- Pedidos -->
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="collapse" href="#collapsePedidos" role="button" aria-expanded="false" aria-controls="collapsePedidos">
+                                    <span data-feather="clipboard"></span>
+                                    Pedidos
+                                </a>
+                                <div class="collapse" id="collapsePedidos">
+                                    <div class="card bg-dark">
+                                        <a href="#" class="nav-link text-light" id="pedidos1">
+                                            <span data-feather="droplet"></span>
+                                            Medicamento
+                                        </a>
+                                        <a href="#" class="nav-link text-light" id="pedidos2">
+                                            <span data-feather="thermometer"></span>
+                                            Suprimento
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            if (ViewBag.Estoque != 1)
+                            {
+                                <!-- Novo Pedido -->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="collapse" href="#collapseNovoPedido" role="button" aria-expanded="false" aria-controls="collapseNovoPedido">
+                                        <span data-feather="shopping-bag"></span>
+                                        Novo Pedido
+                                    </a>
+                                    <div class="collapse" id="collapseNovoPedido">
+                                        <div class="card bg-dark">
+                                            <a href="#" class="nav-link text-light" id="novoPedido1">
+                                                <span data-feather="droplet"></span>
+                                                Medicamento
+                                            </a>
+                                            <a href="#" class="nav-link text-light" id="novoPedido2">
+                                                <span data-feather="thermometer"></span>
+                                                Suprimento
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+
+                            if (ViewBag.Estoque == 1)
+                            {
+                                <!-- Compras -->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="collapse" href="#collapseCompras" role="button" aria-expanded="false" aria-controls="collapseCompras">
+                                        <span data-feather="credit-card"></span>
+                                        Compras
+                                    </a>
+                                    <div class="collapse" id="collapseCompras">
+                                        <div class="card bg-dark">
+                                            <a href="#" class="nav-link text-light" id="compras1">
+                                                <span data-feather="droplet"></span>
+                                                Medicamento
+                                            </a>
+                                            <a href="#" class="nav-link text-light" id="compras2">
+                                                <span data-feather="thermometer"></span>
+                                                Suprimento
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <!-- Nova Compra -->
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="collapse" href="#collapseNovaCompra" role="button" aria-expanded="false" aria-controls="collapseNovaCompra">
+                                        <span data-feather="shopping-cart"></span>
+                                        Nova Compra
+                                    </a>
+                                    <div class="collapse" id="collapseNovaCompra">
+                                        <div class="card bg-dark">
+                                            <a href="#" class="nav-link text-light" id="novaCompras1">
+                                                <span data-feather="droplet"></span>
+                                                Medicamento
+                                            </a>
+                                            <a href="#" class="nav-link text-light" id="novaCompras2">
+                                                <span data-feather="thermometer"></span>
+                                                Suprimento
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        }
+
+                        <!-- Relatórios -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="bar-chart-2"></span>
+                                Relatórios
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>...</span>
+                        <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+
+                    <!--
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="file-text"></span>
+                                Current month
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="file-text"></span>
+                                Last quarter
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="file-text"></span>
+                                Social engagement
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="file-text"></span>
+                                Year-end sale
+                            </a>
+                        </li>
+                    </ul>
+                        -->
+                </div>
+            </nav>
+
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Modal Faturar Pedido -->
+    <div class="modal fade" id="ModalFaturarPedido" tabindex="-1" role="dialog" aria-labelledby="ModalFaturarPedidoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form action="/">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalFaturarPedido">Faturar Pedido</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Nº Pedido:</label>
+                            <input type="text" class="form-control" id="recipient-name" name="id" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Faturar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Unir Compras -->
+    <div class="modal fade" id="ModalUnirCompras" tabindex="-1" role="dialog" aria-labelledby="ModalUnirCompras" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <form action="/">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalUnirCompras">Pedidos Selecionados</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" name="tipoProduto" required hidden />
+                        <div class="list-group" id="todosPedidos"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-warning">Concluir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    <script>window.jQuery || document.write('<script src="~/Script/jquery-3.5.1.slim.js"><\/script>')</script>
+    @Scripts.Render("~/bundles/stock")
+
+    @if (ViewBag.Estoque != null)
+    {
+        <script src="~/Scripts/SemusScripts/ModificaNavbarEstoque.js"></script>
+    }
+
+    @RenderSection("scripts", required: false)
+
+    @if (TempData["Message"] != null)
+    {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+        <script>
+            bootbox.alert({
+                size: "small",
+                title: "Detalhes",
+                message: '@TempData["Message"]',
+                callback: function () { /* your callback code */ }
+            });
+        </script>
+    }
+</body>
+</html>

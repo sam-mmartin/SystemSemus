@@ -1,0 +1,53 @@
+﻿@model SistemaSemus.Models.Receita
+
+@{
+    ViewBag.Title = "Detalhes Receita";
+}
+
+<main role="main">
+    <div class="jumbotron jumbotron-Minor">
+        <div class="container">
+            <h3 class="display-4">Detalhes</h3>
+            <p>
+                <a class="btn btn-sm btn-outline-secondary" href="~/Receita/Index" role="button">&laquo; Voltar</a>
+            </p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.DataCadastro)</dt>
+                    <dd>@Html.DisplayFor(model => model.DataCadastro)</dd>
+                    <dt>Paciente</dt>
+                    <dd>@Html.DisplayFor(model => model.Paciente.Nome)</dd>
+                    <dt>Médico</dt>
+                    <dd>@Html.DisplayFor(model => model.Medico.Nome)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.Medico.ID)</dt>
+                    <dd>@Html.DisplayFor(model => model.Medico.ID)</dd>
+                </dl>
+            </div>
+            <div class="col-md-8">
+                <dl>
+                    <dt>@Html.DisplayName("Prescrições")</dt>
+                    <dd>
+                        <table class="table">
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Quantidade</th>
+                            </tr>
+                            @foreach (var item in Model.Receitados)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Produto.Descricao)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Quantidade)</td>
+                                </tr>
+                            }
+                        </table>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <hr>
+    </div>
+</main>

@@ -1,0 +1,70 @@
+﻿@model SistemaSemus.Models.EstoqueSemus
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutEstoques.cshtml";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" id="EstoqueID">@Model.ID - @Model.Descricao</h1>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <a href="~/EstoqueSemus/Edit?id=@Model.ID" class="btn btn-sm btn-outline-warning">Editar</a>
+                @if (Model.ID == 1)
+                {
+                    @Html.ActionLink("Cadastrar Medicamento", "Create", "Produto", new { TipoProduto = 1 }, new { @class = "btn btn-sm btn-outline-secondary" })
+                    @Html.ActionLink("Cadastrar Suprimento", "Create", "Produto", new { TipoProduto = 2 }, new { @class = "btn btn-sm btn-outline-secondary" })
+                }
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span>
+                This week
+            </button>
+        </div>
+    </div>
+    <!-- Gráfico -->
+    <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+    <!-- Detalhes -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h5 class="card-title text-info">Medicamentos</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Todos Produtos: @Model.ProdutoEstoqueSemus.Where(e => e.Produto.TipoProduto == 1).Count()<br />
+                        Pedidos:
+                        @if (ViewBag.Pedidos != null)
+                        {
+                            @ViewBag.Pedidos
+                        }
+                        else
+                        {
+                            @Model.PedidoEstoques.Where(p => p.TipoPedido == 1 && p.Faturado == false).Count()
+                        }
+                    </h5>
+                    <p class="card-text"></p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h5 class="card-title text-danger">Suprimentos</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Todos Produtos: @Model.ProdutoEstoqueSemus.Where(e => e.Produto.TipoProduto == 2).Count()<br />
+                        Pedidos: @Model.PedidoEstoques.Where(p => p.TipoPedido == 2 && p.Faturado == false).Count()
+                    </h5>
+                    <p class="card-text"></p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

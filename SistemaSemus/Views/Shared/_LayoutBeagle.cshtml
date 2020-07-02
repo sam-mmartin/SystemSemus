@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - SEMUS</title>
+    @Styles.Render("~/Content/beagle")
+</head>
+<body>
+    <div class="be-wrapper">
+        <!-- Header -->
+        @Html.Partial("_NavBarBeagle")
+        <!-- Sidebar -->
+        @Html.Partial("_SidebarBeagle")
+
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/beagle")
+    <script src="~/Scripts/Beagle/jquery-ui.min.js"></script>
+    <script src="~/Scripts/SemusScripts/customBeagle.methods.js"></script>
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //-initialize the javascript
+            App.init();
+        });
+    </script>
+
+    @if (TempData["Message"] != null)
+    {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+        <script>
+            bootbox.alert({
+                size: "small",
+                title: "Detalhes",
+                message: '@TempData["Message"]',
+                callback: function () { /* your callback code */ }
+            });
+        </script>
+    }
+</body>
+</html>

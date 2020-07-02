@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - SEMUS</title>
+    @Styles.Render("~/Content/create")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+    @RenderBody()
+
+    <footer class="container">
+        <p>&copy; @DateTime.Now.Year - Meu Aplicativo ASP.NET</p>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/popper")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+
+    @if (TempData["Message"] != null)
+    {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+        <script>
+            bootbox.alert({
+                size: "small",
+                title: "Detalhes",
+                message: '@TempData["Message"]',
+                callback: function () { /* your callback code */ }
+            });
+        </script>
+    }
+</body>
+</html>

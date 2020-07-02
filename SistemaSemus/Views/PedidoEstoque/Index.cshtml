@@ -1,0 +1,185 @@
+﻿@model IEnumerable<SistemaSemus.Models.PedidoEstoque>
+
+@{
+    ViewBag.Title = "Index Pedidos";
+    Layout = "~/Views/Shared/_LayoutEstoques.cshtml";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" id="EstoqueID">@ViewBag.Estoque - @ViewBag.Descricao</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <a href="~/EstoqueSemus/Details?id=@ViewBag.Estoque" class="btn btn-sm btn-outline-secondary">&laquo; Voltar</a>
+                @if (ViewBag.Estoque == 1)
+                {
+                    <button type="button" id="FaturarPedido" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#ModalFaturarPedido">
+                        Faturar Pedido
+                    </button>
+                }
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span> This week
+            </button>
+        </div>
+    </div>
+    <!-- section -->
+    <div class="container">
+        <div class="row">
+            @{
+                int contador = 0;
+                foreach (var item in Model)
+                {
+                    string pedidoInfo = item.ID + "-"
+                            + item.EstoqueSemus.Descricao + "-"
+                            + item.TipoPedido + "-"
+                            + item.DataEntrada + "-"
+                            + item.DataFaturado;
+
+                    if (item.UserID == null)
+                    {
+                        pedidoInfo += "-Não Encontrado";
+                    }
+                    else
+                    {
+                        pedidoInfo += "-" + item.ApplicationUser.UserName;
+                    }
+
+                    if (contador == 2)
+                    {
+                        <div class="w-100"></div>
+                    }
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <!-- Header -->
+                            <div class="card-header">
+                                <div class="row">
+                                    <!-- Title -->
+                                    <div class="col-md-8">
+                                        <h6>
+                                            @Html.DisplayFor(modelItem => item.ID) ---
+                                            @Html.DisplayFor(modelItem => item.EstoqueSemus.Descricao)
+                                        </h6>
+                                    </div>
+                                    <!-- Buttons -->
+                                    <div class="col-md-4">
+                                        <div class="btn-toolbar mb-2 mb-md-0">
+                                            <div class="btn-group mr-2">
+                                                <a href="#" name="@pedidoInfo" class="btn btn-outline-secondary btn-sm detailsPed" data-toggle="modal" data-target="#DetalhesPedidoEstoque">Detalhes</a>
+                                                @if (ViewBag.Estoque == 1 && !item.Faturado)
+                                                {
+                                                    <a href="~/PedidoEstoque/FaturarPedido?id=@item.ID" class="btn btn-outline-primary btn-sm">Faturar</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Table -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Descrição</th>
+                                                <th>Quantidade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var elemento in item.PedidoProdutos)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @if (elemento.ProdutoID == null)
+                                                        {
+                                                            <i class="far fa-circle"></i>
+                                                        }
+                                                        else if (elemento.ProdutoSemEstoqueID == null)
+                                                        {
+                                                            <i class="far fa-check-circle"></i>
+                                                        }
+                                                    </td>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.Descricao)</td>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.Quantidade)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</main>
+
+<!-- Modal Detalhes -->
+<div class="modal fade" id="DetalhesPedidoEstoque" tabindex="-1" role="dialog" aria-labelledby="DetalhesPedidoEstoqueTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetalhesPedidoEstoqueTitle">Detalhes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Número do Pedido</h6>
+                        </div>
+                        <p class="mb-1" id="idPedidoEstoque"></p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Cliente</h6>
+                        </div>
+                        <p class="mb-1" id="estoqueSemus"></p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Tipo de Pedido</h6>
+                        </div>
+                        <p class="mb-1" id="tipoPedido"></p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Data de Entrada</h6>
+                        </div>
+                        <p class="mb-1" id="dataEntrada"></p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Data do Faturamento</h6>
+                        </div>
+                        <p class="mb-1" id="dataFaturado"></p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Usuário</h6>
+                        </div>
+                        <p class="mb-1" id="user"></p>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/Scripts/SemusScripts/ModificaNavbarEstoque.js"></script>
+    <script src="~/Scripts/SemusScripts/detailsModal.js"></script>
+}

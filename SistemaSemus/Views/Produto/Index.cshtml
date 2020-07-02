@@ -1,0 +1,212 @@
+﻿@model PagedList.IPagedList<SistemaSemus.Models.ProdutoEstoqueSemus>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index Produtos";
+    Layout = "~/Views/Shared/_LayoutEstoques.cshtml";
+    string desc_down_up = ViewBag.DescricaoSortParm == "descricao_desc" ? "down" : "up";
+    string categ_down_up = ViewBag.CategoriaSortParm == "Categoria" ? "up" : "down";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" id="EstoqueID">@ViewBag.Estoque - @ViewBag.Descricao</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <a href="~/EstoqueSemus/Details?id=@ViewBag.Estoque" class="btn btn-sm btn-outline-secondary">&laquo; Voltar</a>
+                @if (ViewBag.Estoque == 1)
+                {
+                    @Html.ActionLink("Cadastrar Produto", "Create", "Produto", new { TipoProduto = ViewBag.TipoProduto }, new { @class = "btn btn-sm btn-outline-secondary" })
+                }
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#ModalItensFalta">
+                    Itens em Falta
+                </button>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span>
+                This week
+            </button>
+        </div>
+    </div>
+
+    @if (ViewBag.TipoProduto == 1)
+    {
+        <h4 class="text-info">Medicamentos</h4>
+    }
+    else if (ViewBag.TipoProduto == 2)
+    {
+        <h4 class="text-danger">Suprimentos</h4>
+    }
+
+    <!-- section -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">
+                                @Html.ActionLink("Descrição", "Index", new { estoqueID = ViewBag.Estoque, TipoProduto = ViewBag.TipoProduto, sortOrder = ViewBag.DescricaoSortParm, currentFilter = ViewBag.CurrentFilter })
+                                <i class="fas fa-angle-double-@desc_down_up text-primary"></i>
+                            </th>
+                            <th scope="col">
+                                @Html.ActionLink("Categoria", "Index", new { estoqueID = ViewBag.Estoque, TipoProduto = ViewBag.TipoProduto, sortOrder = ViewBag.CategoriaSortParm, currentFilter = ViewBag.CurrentFilter })
+                                <i class="fas fa-angle-double-@categ_down_up text-primary"></i>
+                            </th>
+                            <th scope="col"><i class="fas fa-info-circle"></i></th>
+                            @if (ViewBag.Estoque == 1)
+                            {
+                                <th scope="col"><i class="fas fa-trash"></i></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            string produtoInfo = item.Produto_ID + "-" +
+                                item.QuantidadeTotal + "-" +
+                                item.QuantidadeEntrada + "-" +
+                                item.DataEntrada + "-" +
+                                item.QuantidadeSaida + "-" +
+                                item.DataSaida;
+
+                            if (item.UserID == null)
+                            {
+                                produtoInfo += "-Não encontrado";
+                            }
+                            else
+                            {
+                                produtoInfo += "-" + item.ApplicationUser.UserName;
+                            }
+
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Produto_ID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Produto.Descricao)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Produto.Categoria)</td>
+                                <td>
+                                    <button name="@produtoInfo" type="button" class="btn btn-primary detailsPro" data-toggle="modal" data-target="#ModalCenter">
+                                        Visualizar Detalhes
+                                    </button>
+                                </td>
+                                @if (item.EstoqueSemus_ID == 1)
+                                {
+                                    <td>@Html.ActionLink("Apagar", "Delete", new { id = item.Produto_ID }, new { @class = "btn btn-danger" })</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+                Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, estoqueID = ViewBag.Estoque, TipoProduto = ViewBag.TipoProduto, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Detalhes -->
+<div class="modal fade" id="ModalCenter" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCenterTitle">Detalhes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Quantidade em estoque</h6>
+                        </div>
+                        <p class="mb-1" id="Total"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Última Entrada</h6>
+                        </div>
+                        <p class="mb-1" id="Entrada"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Data da última entrada</h6>
+                        </div>
+                        <p class="mb-1" id="dataEntrada"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Última Saída</h6>
+                        </div>
+                        <p class="mb-1" id="Saida"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Data da última saída</h6>
+                        </div>
+                        <p class="mb-1" id="dataSaida"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Usuário</h6>
+                        </div>
+                        <p class="mb-1" id="user"></p>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (ViewBag.Estoque == 1)
+                {
+                    <a class="btn btn-warning" id="editarPro" role="button">Atualizar Estoque</a>
+                }
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Itens em Falta -->
+<div class="modal fade" id="ModalItensFalta" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCenterTitle">Detalhes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    @foreach (var item in Model)
+                    {
+                        if (item.QuantidadeTotal == 0)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">@item.Produto.Descricao</h6>
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/SemusScripts/detailsModal.js"></script>
+}

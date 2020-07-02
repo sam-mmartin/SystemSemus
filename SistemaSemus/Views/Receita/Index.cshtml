@@ -1,0 +1,204 @@
+﻿@model PagedList.IPagedList<SistemaSemus.Models.Receita>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<main role="main">
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Receituário</h1>
+        <p class="lead">
+            Visualize todas as receitas cadastradas no sistema.
+            Realize a consulta de receitas por uma data, paciente ou médico específicos e,
+            visualize os resultados do receituário.
+            Visualize os medicamentos prescritos em cada receita.
+        </p>
+    </div>
+
+    <div class="container">
+        <div class="card-deck mb-3 text-center">
+            <!-- TODAS AS RECEITAS-->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Todas Receitas</h4>
+                </div>
+                <div class="card-body">
+                    <form action="~/Receita?Registers=All" method="post">
+                        <input type="text" name="ID" class="form-control noborder DataMask" placeholder="Digite uma data" />
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>Exiba receitas de data específica</li>
+                            <li>
+                                <a href="#" role="button" data-toggle="modal" data-target="#exampleModal">
+                                    Entregar Medicamentos
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="collapse" href="#All" role="button" aria-expanded="false" aria-controls="All">
+                                    Abrir / Fechar Visualização
+                                </a>
+                            </li>
+                        </ul>
+                        <button type="submit" role="button" class="btn btn-lg btn-block btn-outline-primary">
+                            Buscar
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- PACIENTES -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Paciente</h4>
+                </div>
+                <div class="card-body">
+                    <form action="~/Receita?Registers=Paciente" method="post">
+                        <input type="text" name="ID" id="CPF" required class="form-control noborder" placeholder="Digite o CPF do paciente" />
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>...</li>
+                            <li>...</li>
+                            <li>
+                                <a data-toggle="collapse" href="#Paciente" role="button" aria-expanded="false" aria-controls="Paciente">
+                                    Abrir / Fechar Visualização
+                                </a>
+                            </li>
+                        </ul>
+                        <button type="submit" role="button" class="btn btn-lg btn-block btn-outline-primary">
+                            Buscar
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MÉDICOS -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Médico</h4>
+                </div>
+                <div class="card-body">
+                    <form action="~/Receita?Registers=Medico" method="post">
+                        <input type="text" name="ID" id="CRM" required class="form-control noborder" placeholder="Digite o CRM do médico" />
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>...</li>
+                            <li>...</li>
+                            <li>
+                                <a data-toggle="collapse" href="#Medico" role="button" aria-expanded="false" aria-controls="Medico">
+                                    Abrir / Fechar Visualização
+                                </a>
+                            </li>
+                        </ul>
+                        <button type="submit" role="button" class="btn btn-lg btn-block btn-outline-primary">
+                            Buscar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @if (Model != null)
+        {
+            string data_down_up = ViewBag.DataSortParm == "data_desc" ? "down" : "up";
+            string paciente_down_up = ViewBag.PacienteSortParm == "Paciente" ? "up" : "down";
+            string medico_down_up = ViewBag.MedicoSortParm == "Medico" ? "up" : "down";
+
+            <div class="collapse show" id="@ViewBag.Type">
+                <div class="card card-body">
+                    <h5 class="card-title" id="idTitle">@ViewBag.ID</h5>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">
+                                            @Html.ActionLink("Data de Entrada", "Index", new { Registers = ViewBag.Type, sortOrder = ViewBag.DataSortParm, currentFilter = ViewBag.CurrentFilter })
+                                            <i class="fas fa-angle-double-@data_down_up text-primary"></i>
+                                        </th>
+                                        <th scope="col">
+                                            @Html.ActionLink("Paciente", "Index", new { Registers = ViewBag.Type, sortOrder = ViewBag.PacienteSortParm, currentFilter = ViewBag.CurrentFilter })
+                                            <i class="fas fa-angle-double-@paciente_down_up text-primary"></i>
+                                        </th>
+                                        <th scope="col">
+                                            @Html.ActionLink("Médico", "Index", new { Registers = ViewBag.Type, sortOrder = ViewBag.MedicoSortParm, currentFilter = ViewBag.CurrentFilter })
+                                            <i class="fas fa-angle-double-@medico_down_up text-primary"></i>
+                                        </th>
+                                        <th scope="col">CRM</th>
+                                        <th scope="col"><i class="fas fa-info-circle"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.DataCadastro)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Paciente.Nome)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Medico.Nome)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.MedicoID)</td>
+                                            <td>
+                                                @Html.ActionLink("Detalhes", "Details", new { id = item.ID }) |
+                                                @Html.ActionLink("Editar", "Edit", new { id = item.ID })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <br />
+                            Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, Registers = ViewBag.Type, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <hr />
+    </div>
+</main>
+
+<!-- Modal Buscar Receita Médica -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nova Receita</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <select class="form-control" id="tipoBusca">
+                            <option value="1">Nº da Receita Médica</option>
+                            <option value="2">CPF do Paciente</option>
+                        </select>
+                        <br />
+                        <input type="text" class="form-control" placeholder="Digite o Nº da receita" id="searchID" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="buscaReceitaMedica()">Continuar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Receitas Médicas -->
+<div class="modal fade" id="modalReceitasMedicas" tabindex="-1" role="dialog" aria-labelledby="modalReceitasMedicasLabel" aria-hidden="true">
+    @{
+        Html.RenderPartial("BuscarReceitaMedica");
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/masks")
+    @Scripts.Render("~/bundles/semusJS")
+}

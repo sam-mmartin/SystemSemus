@@ -1,0 +1,56 @@
+﻿<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+
+    @if (ViewBag.NavBar != null)
+    {
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="~/Home/Index">SEMUS</a>
+
+        using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "w-100" }))
+        {
+            if (ViewBag.NavBar)
+            {
+                @Html.TextBox("SearchString", null, new { @class = "form-control form-control-dark w-100", placeholder = "Digite o CPF do paciente" })
+            }
+            else
+            {
+                @Html.TextBox("SearchString", null, new { @class = "form-control form-control-dark w-100", placeholder = "Pesquisar" })
+            }
+        }
+
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                @Html.Partial("_SignOut")
+            </li>
+        </ul>
+    }
+    else
+    {
+        @Html.ActionLink("SEMUS", "Index", "Home", null, new { @class = "navbar-brand" })
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UsuarioManager/IndexAsync">Gerência</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Relatórios</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Gráficos</a>
+                </li>
+            </ul>
+
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline my-2 my-lg-0" }))
+            {
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control mr-sm-2", placeholder = "Pesquisar" })
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+            }
+
+            @Html.Partial("_LoginPartial")
+        </div>
+    }
+</nav>

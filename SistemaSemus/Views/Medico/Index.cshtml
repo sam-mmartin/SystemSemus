@@ -1,0 +1,128 @@
+﻿@model IEnumerable<SistemaSemus.Models.Medico>
+
+@{
+    ViewBag.Title = "Index Médicos";
+    Layout = "~/Views/Shared/_LayoutBeagle.cshtml";
+}
+
+<div class="be-content">
+    <div class="main-content container-fluid">
+        <div class="user-profile">
+            <div class="row">
+                <!-- Médico -->
+                <div class="col-lg-5">
+                    <div class="user-display">
+                        <div class="user-display-bg">
+                            <img src="~/Images/Backgrounds/health-background.jpg" alt="Profile Background">
+                        </div>
+
+                        <div class="user-display-bottom">
+                            <div class="user-display-avatar"><img src="~/Images/doctor.png" alt="Avatar"></div>
+
+                            <div class="user-display-info">
+                                <div class="name">Nome</div>
+                                <div class="nick">
+                                    <span class="mdi mdi-account"></span> CRM
+                                </div>
+                            </div>
+
+                            <div class="row user-display-details">
+                                <div class="col-4">
+                                    <div class="title">Receitas</div>
+                                    <div class="counter" id="receitas">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- About -->
+                    <div class="user-info-list card">
+                        <div class="card-header card-header-divider">Sobre</div>
+
+                        <div class="card-body">
+                            <table class="no-border no-strip skills">
+                                <tbody class="no-border-x no-border-y">
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-view-subtitles"></span></td>
+                                        <td class="item">CRM<span class="icon s7-portfolio"></span></td>
+                                        <td id="CRM"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-city"></span></td>
+                                        <td class="item">Area Atuação<span class="icon s7-portfolio"></span></td>
+                                        <td id="Area"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-account-calendar"></span></td>
+                                        <td class="item">Data Cadastro<span class="icon s7-gift"></span></td>
+                                        <td id="Cadastro"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-smartphone-android"></span></td>
+                                        <td class="item">Celular<span class="icon s7-phone"></span></td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-globe-alt"></span></td>
+                                        <td class="item">Endereço<span class="icon s7-map-marker"></span></td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><span class="mdi mdi-pin"></span></td>
+                                        <td class="item">Email<span class="icon s7-global"></span></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Médicos -->
+                <div class="col-lg-7">
+                    <div class="widget widget-fullwidth widget-small">
+                        <div class="widget-head pb-6">
+                            <div class="title">Médicos</div>
+                        </div>
+                        <div class="widget-chart-container">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>CRM</th>
+                                        <th>Nome</th>
+                                        <th><i class="icon mdi mdi-info-outline"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="user-avatar">
+                                                <img src="~/Images/Beagle/avatar5.png" alt="Avatar">
+                                                <a href="#" class="crmLink">@item.ID</a>
+                                            </td>
+                                            <td>@item.Nome</td>
+                                            <td>
+                                                @Html.ActionLink("Editar", "Edit", new { id = item.ID }) |
+                                                @Html.ActionLink("Apagar", "Delete", new { id = item.ID })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/SemusScripts/medicos.js"></script>
+}

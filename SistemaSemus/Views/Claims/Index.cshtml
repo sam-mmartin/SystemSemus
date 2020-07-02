@@ -1,0 +1,76 @@
+﻿@model IEnumerable<SistemaSemus.Models.Claims>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBeagle.cshtml";
+}
+
+<div class="be-content">
+    <div class="main-content container-fluid">
+        <div class="user-profile">
+            <div class="row">
+                <!-- Create -->
+                <div class="col-lg-5">
+                    <div class="card card-border-color card-border-color-warning">
+                        <div class="card-header card-header-divider">Nova Claim<span class="card-subtitle">Insira a descrição da nova claim a ser criada</span></div>
+                        <div class="card-body">
+                            <form action="/Claims/Create" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-group pt-2">
+                                    <label for="Descricao">Descrição</label>
+                                    <input class="form-control" id="Descricao" name="Descricao" type="text" placeholder="Digite a descrição da claim">
+                                </div>
+
+                                <div class="row pt-3">
+                                    <div class="col-sm-6 pb-4 pb-lg-0">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-right">
+                                            <button class="btn btn-space btn-danger" type="submit">Salvar</button>
+                                            <button class="btn btn-space btn-secondary" id="cancel">Cancelar</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="col-lg-7">
+                    <div class="widget widget-fullwidth widget-small">
+                        <div class="widget-head pb-6">
+                            <div class="title">Claims</div>
+                        </div>
+                        <div class="widget-chart-container">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Descrição</th>
+                                        <th><i class="icon mdi mdi-info-outline"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                                            <td>
+                                                @Html.ActionLink("Editar", "Edit", new { id = item.ID }) |
+                                                @Html.ActionLink("Detalhes", "Details", new { id = item.ID }) |
+                                                @Html.ActionLink("Apagar", "Delete", new { id = item.ID })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

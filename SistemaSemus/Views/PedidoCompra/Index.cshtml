@@ -1,0 +1,192 @@
+﻿@model IEnumerable<SistemaSemus.Models.PedidoCompra>
+
+@{
+    ViewBag.Title = "Index Compras";
+    Layout = "~/Views/Shared/_LayoutEstoques.cshtml";
+}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+        <h1 class="h2" id="EstoqueID">
+            @ViewBag.Estoque - @ViewBag.Descricao : <small class="text-muted">@ViewBag.TipoProduto</small>
+        </h1>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <a href="~/EstoqueSemus/Details?id=@ViewBag.Estoque" class="btn btn-sm btn-outline-secondary">&laquo; Voltar</a>
+                @if (ViewBag.UnirCompras)
+                {
+                    <!-- Button trigger modal -->
+                    <button type="button" id="btnModalUC" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#ModalUnirCompras">
+                        Compra Conjunta
+                    </button>
+                }
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span> This week
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            @{
+                int contador = 0;
+                foreach (var item in Model)
+                {
+                    string compraInfo = item.ID + "-" +
+                            item.TipoProduto + "-" +
+                            item.DataEntrada + "-" +
+                            item.DataFaturado;
+
+                    if (item.UserID == null)
+                    {
+                        compraInfo += "-Não Encontrado";
+                    }
+                    else
+                    {
+                        compraInfo += "-" + item.ApplicationUser.UserName;
+                    }
+
+                    if (contador == 2)
+                    {
+                        <div class="w-100"></div>
+                    }
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+
+                                    <!-- Badge -->
+                                    <div class="col-md-8">
+                                        <h5>
+                                            @if (!item.Faturado && ViewBag.UnirCompras)
+                                            {
+                                                <a href="#" class="badge badge-warning unirPedidos">Pedido: @Html.DisplayFor(modelItem => item.ID)</a><br />
+                                            }
+                                            else
+                                            {
+                                                <span href="#" class="badge badge-dark">Pedido: @Html.DisplayFor(modelItem => item.ID)</span><br />
+                                            }
+                                        </h5>
+                                    </div>
+
+                                    <!-- Button -->
+                                    <div class="col-md-4">
+                                        <div class="btn-toolbar mb-2 mb-md-0">
+                                            <div class="btn-group mr-2">
+                                                <a href="#" name="@compraInfo" class="btn btn-outline-secondary btn-sm detailsCom" data-toggle="modal" data-target="#DetalhesPedidoCompra">Detalhes</a>
+                                                @if (!item.Faturado)
+                                                {
+                                                    <a href="~/PedidoCompra/FaturarCompra?id=@item.ID&tipoProduto=@item.TipoProduto" class="btn btn-outline-primary btn-sm">Faturar</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Descrição</th>
+                                                <th>Quantidade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var elemento in item.PedidoCompraProdutos)
+                                            {
+                                                <tr>
+                                                    <td><i class="far fa-check-circle"></i></td>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.Produto.Descricao)</td>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.Quantidade)</td>
+                                                </tr>
+                                            }
+                                            @foreach (var elemento in item.PedidoCompraNaoCadastrados)
+                                            {
+                                                <tr>
+                                                    <td><i class="far fa-circle"></i></td>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.ProdutoNaoCadastrado.Descricao)</td>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.Quantidade)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</main>
+
+<!-- Modal Detalhes -->
+<div class="modal fade" id="DetalhesPedidoCompra" tabindex="-1" role="dialog" aria-labelledby="DetalhesPedidoCompraTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetalhesPedidoCompraTitle">Detalhes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="list-group">
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Número do Pedido</h6>
+                        </div>
+                        <p class="mb-1" id="idPedidoCompra"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Tipo de Pedido</h6>
+                        </div>
+                        <p class="mb-1" id="tipoPedido"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Data de Entrada</h6>
+                        </div>
+                        <p class="mb-1" id="dataEntrada"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Data do Faturamento</h6>
+                        </div>
+                        <p class="mb-1" id="dataFaturado"></p>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Usuário</h6>
+                        </div>
+                        <p class="mb-1" id="user"></p>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/SemusScripts/ModificaNavbarEstoque.js"></script>
+    <script src="~/Scripts/SemusScripts/UnirCompras.js"></script>
+    <script src="~/Scripts/SemusScripts/detailsModal.js"></script>
+}

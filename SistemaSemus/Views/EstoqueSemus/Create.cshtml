@@ -1,0 +1,33 @@
+﻿@model SistemaSemus.Models.EstoqueSemus
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutCreate.cshtml";
+}
+
+<div class="container">
+    <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="~/Images/stock.png" alt="" width="120" height="80">
+        <h2>Novo Estoque</h2>
+        <p class="lead">Crie uma nova de base de dados. Insira a designação do local onde o estoque ficará localizado.</p>
+        <h4><a href="~/EstoqueSemus/Index" role="button">&laquo; Voltar</a></h4>
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                @Html.LabelFor(model => model.Descricao)
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-4">
+                <label></label>
+                <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Criar Estoque</button>
+            </div>
+        </div>
+    }
+    <hr />
+</div>

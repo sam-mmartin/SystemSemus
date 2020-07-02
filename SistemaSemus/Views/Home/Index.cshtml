@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Inicio";
+}
+
+<main role="main">
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3">Bem Vindo!</h1>
+            <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+            <p><a class="btn btn-primary btn-lg" href="#" id="registerLink" role="button">Saiba mais &raquo;</a></p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <!-- Estoque -->
+            <div class="col-md-4">
+                <h2>Estoque</h2>
+                <p>
+                    Realize o gereciamento de medicamentos<br />
+                    e suprimentos. Visualize as ordens<br />
+                    de pedidos...
+                </p>
+                <p><a class="btn btn-secondary" href="~/EstoqueSemus/Index" role="button">Acessar &raquo;</a></p>
+            </div>
+
+            <!-- Receitas -->
+            <div class="col-md-4">
+                <h2>Receituário</h2>
+                <p>
+                    Realize o cadastro e gerenciamento<br />
+                    de receitas. Vizualize as ordens de pedido<br />
+                    ao estoque...
+                </p>
+                <p><a class="btn btn-secondary" href="~/Receita/RedirectActionAsync" role="button">Acessar &raquo;</a></p>
+            </div>
+
+            <!-- Pacientes -->
+            <div class="col-md-4">
+                <h2>Pacientes</h2>
+                <p>
+                    Realize o cadastro e gerenciamento<br />
+                    de pacientes. Vizualize o receituário<br />
+                    do paciente...
+                </p>
+                <p><a class="btn btn-secondary" href="~/Paciente/Index" role="button">Acessar &raquo;</a></p>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <!-- Modal Medicamentos -->
+    <div class="modal fade" id="ModalMedicamento" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalCenterTitle">Estoque Medicamentos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <!-- GERAL -->
+                        <a href="~/EstoqueSemus/Index" class="list-group-item list-group-item-action flex-column align-items-start active">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">Geral</h5>
+                            </div>
+                        </a>
+                        <!-- FARMACIA 1-->
+                        <a href="~/EstoqueMedicamento/Hospital_1_Index" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">Hospital 1</h5>
+                            </div>
+                        </a>
+                        <!-- FARMACIA 2-->
+                        <a href="~/EstoqueMedicamento/Hospital_2_Index" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">Hospital 2</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,13 @@
+﻿@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Sair</a>
+    }
+}
+else
+{
+    @Html.ActionLink("Entrar", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "nav-link active", id = "loginLink" })
+}

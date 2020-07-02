@@ -1,0 +1,114 @@
+﻿@model SistemaSemus.Models.Paciente
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@if (Model != null)
+{
+    <main role="main">
+        <div class="jumbotron jumbotron-Minor">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>@Html.DisplayFor(model => model.Nome)</h3>
+                        <p>
+                            <a class="btn btn-sm btn-outline-danger" href="~/ReceituarioMedico/CreateAsync?id=@Model.ID" role="button">Nova Receita &raquo;</a>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <dl>
+                            <dt>@Html.DisplayNameFor(model => model.ID)</dt>
+                            <dd id="CPF">@Html.DisplayFor(model => model.ID)</dd>
+                            <dt>@Html.DisplayNameFor(model => model.RG)</dt>
+                            <dd>@Html.DisplayFor(model => model.RG)</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-4">
+                        <dl>
+                            <dt>@Html.DisplayNameFor(model => model.Orgao_Emissor)</dt>
+                            <dd>@Html.DisplayFor(model => model.Orgao_Emissor)</dd>
+                            <dt>@Html.DisplayNameFor(model => model.DataNascimento)</dt>
+                            <dd>@Html.DisplayFor(model => model.DataNascimento)</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                @{
+                    int contador = 0;
+                    foreach (var item in Model.ReceitaMedicas)
+                    {
+                        if (contador == 2)
+                        {
+                            <div class="w-100"></div>
+                        }
+                        <div class="col-md-6">
+                            <dl>
+                                <dt>Médico | CRM</dt>
+                                <dd>
+                                    @Html.DisplayFor(modelItem => item.Medico.Nome) |
+                                    @Html.DisplayFor(modelItem => item.MedicoID)
+                                </dd>
+                            </dl>
+                            <div class="card">
+                                <div class="card-header">
+                                    Entrada: @item.DataCadastro.ToShortDateString()
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Medicamentos Receitados</h5>
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Descrição</th>
+                                                <th scope="col">Quantidade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var elemento in item.Prescricaos)
+                                            {
+                                                <tr>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.Descricao)</td>
+                                                    <td>@Html.DisplayFor(modelItem => elemento.Quantidade)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    }
+                }
+            </div>
+            <hr>
+        </div>
+    </main>
+}
+else
+{
+    <main role="main">
+        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <h1 class="display-4">Receituário</h1>
+            <p class="lead">
+                Visualize todas as receitas cadastradas no sistema.
+                Realize a consulta de receitas por uma data, paciente ou médico específicos e,
+                visualize os resultados do receituário.
+                Visualize os medicamentos prescritos em cada receita.
+            </p>
+        </div>
+    </main>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/masks")
+    <script>
+        $(function () {
+            $('#SearchString').click(function () {
+                $('#SearchString').mask('000.000.000-00', { reverse: true });
+            });
+        });
+    </script>
+}

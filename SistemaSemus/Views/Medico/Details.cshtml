@@ -1,0 +1,84 @@
+﻿@model SistemaSemus.Models.Medico
+
+@{
+    ViewBag.Title = "Detalhes";
+}
+
+<main role="main">
+    <div class="jumbotron jumbotron-Minor">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="display-4">Detalhes</h3>
+                    <p>
+                        <a class="btn btn-sm btn-outline-secondary" href="~/Medico/Index" role="button">&laquo; Voltar</a>
+                        <a class="btn btn-sm btn-outline-danger" href="~/Medico/AtualizarCRM?id=@Model.ID" role="button">Atualizar CRM &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt>@Html.DisplayNameFor(model => model.Nome)</dt>
+                        <dd>@Html.DisplayFor(model => model.Nome)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.ID)</dt>
+                        <dd>@Html.DisplayFor(model => model.ID)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt>@Html.DisplayNameFor(model => model.Area_Atuacao)</dt>
+                        <dd>@Html.DisplayFor(model => model.Area_Atuacao)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.DataCadastro)</dt>
+                        <dd>@Html.DisplayFor(model => model.DataCadastro)</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            @{
+                int contador = 0;
+                foreach (var item in Model.Receitas)
+                {
+                    if (contador == 2)
+                    {
+                        <div class="w-100"></div>
+                    }
+                    <div class="col-md-6">
+                        <dl>
+                            <dt>Paciente</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.Paciente.Nome)</dd>
+                        </dl>
+                        <div class="card">
+                            <div class="card-header">
+                                Entrada: @item.DataCadastro.ToShortDateString()
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Medicamentos Receitados</h5>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Descrição</th>
+                                            <th scope="col">Quantidade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var elemento in item.Receitados)
+                                        {
+                                            <tr>
+                                                <td>@Html.DisplayFor(modelItem => elemento.Medicamento.Descricao)</td>
+                                                <td>@Html.DisplayFor(modelItem => elemento.Quantidade)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                }
+            }
+        </div>
+        <hr>
+    </div>
+</main>

@@ -1,0 +1,58 @@
+﻿@model SistemaSemus.Models.Medico
+
+@{
+    ViewBag.Title = "Cadastrar Médico";
+}
+
+<main role="main">
+    <div class="jumbotron">
+        <div class="container">
+            <h3 class="display-4">Cadastrar Médico</h3>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            @Html.LabelFor(model => model.ID)
+                            @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control", id = "CRM", required = "required" } })
+                            @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.Nome)
+                            @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control", placeholder = "Digite o nome do médico", required = "required" } })
+                            @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.Area_Atuacao)
+                            @Html.EditorFor(model => model.Area_Atuacao, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Area_Atuacao, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label></label>
+                            @Html.ActionLink("Voltar", "Index", null, null, new { @class = "btn btn-lg btn-secondary btn-block" })
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label></label>
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">Salvar</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <hr />
+    </div>
+</main>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/masks")
+}

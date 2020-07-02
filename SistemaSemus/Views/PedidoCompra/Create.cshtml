@@ -1,0 +1,122 @@
+﻿@model SistemaSemus.Models.PedidoCompra
+
+@{
+    ViewBag.Title = "Nova Compra";
+    Layout = "~/Views/Shared/_LayoutCreate.cshtml";
+
+    var comboProdutos = new List<SelectListItem>();
+    var comboProdutoSemEstoque = new List<SelectListItem>();
+    foreach (var item in ViewBag.Produtos)
+    {
+        comboProdutos.Add(item);
+    }
+    if (ViewBag.ProdutosSemEstoque != null)
+    {
+        foreach (var item in ViewBag.ProdutosSemEstoque)
+        {
+            comboProdutoSemEstoque.Add(item);
+        }
+    }
+}
+
+<div class="container">
+    <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="~/Images/Inventory.png" alt="" height="100">
+        <h2>Nova Compra</h2>
+        <p class="lead" id="infoExcedeu">
+            Selecione o produto da lista, indique a quantidade e adicione ao carrinho.
+            Ou insira a descrição do produto e quantidade caso não tenha no estoque.
+        </p>
+        <h4><a href="~/EstoqueSemus/Details?id=@Model.EstoqueSemus_ID" role="button">&laquo; Voltar</a></h4>
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.EstoqueSemus_ID)
+        @Html.HiddenFor(model => model.TipoProduto)
+        @Html.HiddenFor(model => model.Faturado)
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label>Produto</label>
+                    @Html.DropDownList("itens", comboProdutos, htmlAttributes: new { @class = "form-control" })
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label>Quantidade</label>
+                        <input type="number" name="quant_farmaco" id="quant_farmaco" class="form-control text-body single-line" />
+                    </div>
+                    <div class="col-md-8">
+                        <label></label>
+                        <button type="button" id="btnFarmaco" class="btn btn-lg btn-block btn-primary">Adicionar ao Carrinho</button>
+                    </div>
+                </div>
+                <hr class="mb-4">
+                <!-- Checkbox Adicionar Produto Não Cadastrado -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="NaoCadastrado" onclick="collapseView()">
+                            <label class="custom-control-label" for="NaoCadastrado">Produto não está cadastrado? Selecione para inserir novo produto.</label>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <!-- Collapse Adicionar Produto Não Cadastrado -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                @if (ViewBag.ProdutosSemEstoque != null)
+                                {
+                                    <div class="mb-3">
+                                        <label>Descrição</label>
+                                        @Html.DropDownList("itemSemEstoque", comboProdutoSemEstoque, htmlAttributes: new { @class = "form-control" })
+                                    </div>
+                                    <div class="mb-3">
+                                        <p>Não encontrou o produto desejado? Insira as informações do mesmo abaixo.</p>
+                                        <input type="text" id="descricaoProduto" class="form-control text-body single-line" placeholder="Digite a descrição do produto" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="mb-3">
+                                        <label>Descrição</label>
+                                        <input type="text" id="descricaoProduto" class="form-control text-body single-line" placeholder="Digite a descrição do produto" />
+                                    </div>
+                                }
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label>Quantidade</label>
+                                        <input type="number" id="quantidade" class="form-control text-body single-line" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label></label>
+                                        <button type="button" id="btnNaoCadastrado" class="btn btn-lg btn-block btn-success">Adicionar ao Carrinho</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Carrinho -->
+            <div class="col-md-4 mb-4">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">Carrinho</span>
+                    <span class="badge badge-secondary badge-pill" id="cart_quantidade">0</span>
+                </h4>
+                <ul class="list-group mb-3" id="listaProdutos"></ul>
+                <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Concluir</button>
+            </div>
+        </div>
+    }
+    <hr />
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/selectpicker")
+    <script src="~/Scripts/SemusScripts/Compras.js"></script>
+}
